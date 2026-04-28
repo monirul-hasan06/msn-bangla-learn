@@ -1,9 +1,13 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { GraduationCap } from "lucide-react";
+import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { lovable } from "@/integrations/lovable";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/login")({
   head: () => ({ meta: [{ title: "লগইন — MSN একাডেমি" }] }),
@@ -11,6 +15,29 @@ export const Route = createFileRoute("/login")({
 });
 
 function LoginPage() {
+  const [email, setEmail] = useState("");
+  const [pwd, setPwd] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    const { error } = await supabase.auth.signInWithPassword({ email, password: pwd });
+    setLoading(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    toast.success("সফলভাবে লগইন হয়েছে");
+    navigate({ to: "/" });
+  };
+
+  const handleGoogle = async () => {
+    const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
+    if (result.error) toast.error("Google লগইন ব্যর্থ");
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center gradient-warm px-4 py-10">
       <Card className="w-full max-w-md p-8 gradient-card border-border/50 shadow-glow">
@@ -22,17 +49,19 @@ function LoginPage() {
         </Link>
         <h1 className="text-2xl font-bold text-center mb-2">পুনরায় স্বাগতম</h1>
         <p className="text-sm text-muted-foreground text-center mb-6">আপনার অ্যাকাউন্টে লগইন করুন</p>
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleLogin}>
           <div>
             <Label htmlFor="email">ইমেইল</Label>
-            <Input id="email" type="email" placeholder="email@example.com" className="mt-1.5" />
+            <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="email@example.com" className="mt-1.5" />
           </div>
           <div>
             <Label htmlFor="pwd">পাসওয়ার্ড</Label>
-            <Input id="pwd" type="password" placeholder="••••••••" className="mt-1.5" />
+            <Input id="pwd" type="password" required value={pwd} onChange={(e) => setPwd(e.target.value)} placeholder="••••••••" className="mt-1.5" />
           </div>
-          <Button type="submit" className="w-full gradient-hero text-primary-foreground border-0 shadow-soft hover:shadow-glow transition-all">লগইন</Button>
-          <Button type="button" variant="outline" className="w-full">Google দিয়ে লগইন</Button>
+          <Button type="submit" disabled={loading} className="w-full gradient-hero text-primary-foreground border-0 shadow-soft hover:shadow-glow transition-all">
+            {loading ? "লগইন হচ্ছে..." : "লগইন"}
+          </Button>
+          <Button type="button" onClick={handleGoogle} variant="outline" className="w-full">Google দিয়ে লগইন</Button>
         </form>
         <p className="text-sm text-center text-muted-foreground mt-6">
           অ্যাকাউন্ট নেই? <Link to="/signup" className="text-primary font-medium hover:underline">সাইন আপ করুন</Link>
