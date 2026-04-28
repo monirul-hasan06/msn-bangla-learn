@@ -1,0 +1,89 @@
+import { Link } from "@tanstack/react-router";
+import { Moon, Sun, GraduationCap, Menu, X } from "lucide-react";
+import { useState } from "react";
+import { useTheme } from "@/hooks/use-theme";
+import { Button } from "@/components/ui/button";
+
+const navItems = [
+  { label: "হোম", to: "/" },
+  { label: "কোর্স", to: "/courses" },
+  { label: "শিক্ষক", to: "/teachers" },
+  { label: "ফ্রি ক্লাস", to: "/free-classes" },
+  { label: "নোটিশ", to: "/notices" },
+  { label: "যোগাযোগ", to: "/contact" },
+];
+
+export function Navbar() {
+  const { theme, toggle } = useTheme();
+  const [open, setOpen] = useState(false);
+
+  return (
+    <header className="sticky top-0 z-50 backdrop-blur-xl bg-background/80 border-b border-border">
+      <nav className="container mx-auto flex items-center justify-between h-16 px-4">
+        <Link to="/" className="flex items-center gap-2 font-bold text-xl">
+          <div className="w-9 h-9 rounded-xl gradient-hero flex items-center justify-center shadow-glow">
+            <GraduationCap className="h-5 w-5 text-primary-foreground" />
+          </div>
+          <span className="text-gradient">MSN</span>
+        </Link>
+
+        <ul className="hidden lg:flex items-center gap-1">
+          {navItems.map((item) => (
+            <li key={item.to}>
+              <Link
+                to={item.to}
+                className="px-4 py-2 rounded-lg text-sm font-medium text-foreground/80 hover:text-primary hover:bg-accent transition-colors"
+                activeProps={{ className: "px-4 py-2 rounded-lg text-sm font-medium text-primary bg-accent" }}
+              >
+                {item.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" onClick={toggle} aria-label="Toggle theme">
+            {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+          </Button>
+          <Link to="/login" className="hidden sm:block">
+            <Button variant="ghost" size="sm">লগইন</Button>
+          </Link>
+          <Link to="/signup" className="hidden sm:block">
+            <Button size="sm" className="gradient-hero text-primary-foreground border-0 shadow-soft hover:shadow-glow transition-all">
+              সাইন আপ
+            </Button>
+          </Link>
+          <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setOpen(!open)} aria-label="Menu">
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
+        </div>
+      </nav>
+
+      {open && (
+        <div className="lg:hidden border-t border-border bg-background">
+          <ul className="container mx-auto py-3 px-4 flex flex-col gap-1">
+            {navItems.map((item) => (
+              <li key={item.to}>
+                <Link
+                  to={item.to}
+                  onClick={() => setOpen(false)}
+                  className="block px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-accent"
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+            <li className="flex gap-2 pt-2 border-t border-border mt-2">
+              <Link to="/login" className="flex-1" onClick={() => setOpen(false)}>
+                <Button variant="outline" size="sm" className="w-full">লগইন</Button>
+              </Link>
+              <Link to="/signup" className="flex-1" onClick={() => setOpen(false)}>
+                <Button size="sm" className="w-full gradient-hero text-primary-foreground border-0">সাইন আপ</Button>
+              </Link>
+            </li>
+          </ul>
+        </div>
+      )}
+    </header>
+  );
+}
