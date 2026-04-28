@@ -11,12 +11,14 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TeachersRouteImport } from './routes/teachers'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as NoticesRouteImport } from './routes/notices'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as FreeClassesRouteImport } from './routes/free-classes'
 import { Route as CoursesRouteImport } from './routes/courses'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -28,6 +30,11 @@ const TeachersRoute = TeachersRouteImport.update({
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -60,6 +67,11 @@ const ContactRoute = ContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -74,24 +86,28 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRoute
   '/contact': typeof ContactRoute
   '/courses': typeof CoursesRoute
   '/free-classes': typeof FreeClassesRoute
   '/login': typeof LoginRoute
   '/notices': typeof NoticesRoute
   '/privacy': typeof PrivacyRoute
+  '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
   '/teachers': typeof TeachersRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRoute
   '/contact': typeof ContactRoute
   '/courses': typeof CoursesRoute
   '/free-classes': typeof FreeClassesRoute
   '/login': typeof LoginRoute
   '/notices': typeof NoticesRoute
   '/privacy': typeof PrivacyRoute
+  '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
   '/teachers': typeof TeachersRoute
 }
@@ -99,12 +115,14 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRoute
   '/contact': typeof ContactRoute
   '/courses': typeof CoursesRoute
   '/free-classes': typeof FreeClassesRoute
   '/login': typeof LoginRoute
   '/notices': typeof NoticesRoute
   '/privacy': typeof PrivacyRoute
+  '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
   '/teachers': typeof TeachersRoute
 }
@@ -113,36 +131,42 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/admin'
     | '/contact'
     | '/courses'
     | '/free-classes'
     | '/login'
     | '/notices'
     | '/privacy'
+    | '/profile'
     | '/signup'
     | '/teachers'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
+    | '/admin'
     | '/contact'
     | '/courses'
     | '/free-classes'
     | '/login'
     | '/notices'
     | '/privacy'
+    | '/profile'
     | '/signup'
     | '/teachers'
   id:
     | '__root__'
     | '/'
     | '/about'
+    | '/admin'
     | '/contact'
     | '/courses'
     | '/free-classes'
     | '/login'
     | '/notices'
     | '/privacy'
+    | '/profile'
     | '/signup'
     | '/teachers'
   fileRoutesById: FileRoutesById
@@ -150,12 +174,14 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AdminRoute: typeof AdminRoute
   ContactRoute: typeof ContactRoute
   CoursesRoute: typeof CoursesRoute
   FreeClassesRoute: typeof FreeClassesRoute
   LoginRoute: typeof LoginRoute
   NoticesRoute: typeof NoticesRoute
   PrivacyRoute: typeof PrivacyRoute
+  ProfileRoute: typeof ProfileRoute
   SignupRoute: typeof SignupRoute
   TeachersRoute: typeof TeachersRoute
 }
@@ -174,6 +200,13 @@ declare module '@tanstack/react-router' {
       path: '/signup'
       fullPath: '/signup'
       preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -218,6 +251,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -238,12 +278,14 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AdminRoute: AdminRoute,
   ContactRoute: ContactRoute,
   CoursesRoute: CoursesRoute,
   FreeClassesRoute: FreeClassesRoute,
   LoginRoute: LoginRoute,
   NoticesRoute: NoticesRoute,
   PrivacyRoute: PrivacyRoute,
+  ProfileRoute: ProfileRoute,
   SignupRoute: SignupRoute,
   TeachersRoute: TeachersRoute,
 }
