@@ -86,6 +86,7 @@ export function Footer() {
                 <li><Link to="/about" className="hover:text-primary-glow">আমাদের সম্পর্কে</Link></li>
                 <li><Link to="/privacy" className="hover:text-primary-glow">প্রাইভেসি পলিসি</Link></li>
                 <li><Link to="/contact" className="hover:text-primary-glow">যোগাযোগ</Link></li>
+                <li><Link to="/admin/login" className="hover:text-primary-glow inline-flex items-center gap-1"><ShieldCheck className="h-3.5 w-3.5" /> অ্যাডমিন লগইন</Link></li>
               </ul>
             </div>
 
