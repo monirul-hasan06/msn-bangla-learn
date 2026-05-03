@@ -43,7 +43,7 @@ export function Hero() {
 
           <div className="relative">
             <div className="absolute inset-0 gradient-hero rounded-3xl blur-2xl opacity-30 scale-95" />
-            <img src={heroImg} alt="MNS Academy এ পড়াশোনা করছে শিক্ষার্থীরা" className="relative rounded-3xl shadow-glow w-full" />
+            <img src={banner} alt="MNS Academy এ পড়াশোনা করছে শিক্ষার্থীরা" className="relative rounded-3xl shadow-glow w-full aspect-video object-cover" />
           </div>
         </div>
       </div>
