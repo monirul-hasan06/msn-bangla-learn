@@ -15,6 +15,7 @@ const navItems = [
   { label: "পরীক্ষা", to: "/exam" },
   { label: "নোটিশ", to: "/notices" },
   { label: "যোগাযোগ", to: "/contact" },
+  { label: "অ্যাডমিন", to: "/admin/login" },
 ];
 
 export function Navbar() {
