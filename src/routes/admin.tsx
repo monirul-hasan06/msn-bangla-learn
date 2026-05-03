@@ -503,11 +503,16 @@ function SiteInfoTab() {
 function SettingRow({ item, onSave }: { item: any; onSave: (id: string, v: string, vis: boolean) => void }) {
   const [v, setV] = useState(item.value);
   const [vis, setVis] = useState(item.is_visible);
+  const isImage = /banner|image|logo|photo/i.test(item.key);
   return (
-    <div className="grid md:grid-cols-[180px_1fr_auto_auto] gap-2 items-center p-3 rounded-lg border border-border">
-      <div className="text-sm font-medium">{item.label || item.key}</div>
-      <Input value={v} onChange={(e) => setV(e.target.value)} />
-      <div className="flex items-center gap-2">
+    <div className="grid md:grid-cols-[180px_1fr_auto_auto] gap-2 items-start p-3 rounded-lg border border-border">
+      <div className="text-sm font-medium pt-2">{item.label || item.key}</div>
+      {isImage ? (
+        <ImageUpload value={v} onChange={setV} folder="site" label="" />
+      ) : (
+        <Input value={v} onChange={(e) => setV(e.target.value)} />
+      )}
+      <div className="flex items-center gap-2 pt-2">
         <Switch checked={vis} onCheckedChange={setVis} />
         <span className="text-xs text-muted-foreground">{vis ? "দেখানো হচ্ছে" : "লুকানো"}</span>
       </div>
