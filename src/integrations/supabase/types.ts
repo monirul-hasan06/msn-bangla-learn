@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      class_links: {
+        Row: {
+          created_at: string
+          id: string
+          is_visible: boolean
+          title: string
+          type: string
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_visible?: boolean
+          title: string
+          type?: string
+          url: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_visible?: boolean
+          title?: string
+          type?: string
+          url?: string
+        }
+        Relationships: []
+      }
       courses: {
         Row: {
           class_level: string
@@ -21,6 +48,7 @@ export type Database = {
           description: string | null
           id: string
           is_published: boolean
+          is_visible: boolean
           price: number
           subject: string | null
           thumbnail_url: string | null
@@ -33,6 +61,7 @@ export type Database = {
           description?: string | null
           id?: string
           is_published?: boolean
+          is_visible?: boolean
           price?: number
           subject?: string | null
           thumbnail_url?: string | null
@@ -45,6 +74,7 @@ export type Database = {
           description?: string | null
           id?: string
           is_published?: boolean
+          is_visible?: boolean
           price?: number
           subject?: string | null
           thumbnail_url?: string | null
@@ -94,6 +124,63 @@ export type Database = {
           },
         ]
       }
+      exam_links: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_visible: boolean
+          publish_date: string
+          title: string
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_visible?: boolean
+          publish_date?: string
+          title: string
+          url: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_visible?: boolean
+          publish_date?: string
+          title?: string
+          url?: string
+        }
+        Relationships: []
+      }
+      messages: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          is_read: boolean
+          message: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          is_read?: boolean
+          message: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          is_read?: boolean
+          message?: string
+          name?: string
+        }
+        Relationships: []
+      }
       notices: {
         Row: {
           content: string
@@ -101,6 +188,7 @@ export type Database = {
           created_by: string | null
           id: string
           is_pinned: boolean
+          is_visible: boolean
           title: string
           updated_at: string
         }
@@ -110,6 +198,7 @@ export type Database = {
           created_by?: string | null
           id?: string
           is_pinned?: boolean
+          is_visible?: boolean
           title: string
           updated_at?: string
         }
@@ -119,6 +208,7 @@ export type Database = {
           created_by?: string | null
           id?: string
           is_pinned?: boolean
+          is_visible?: boolean
           title?: string
           updated_at?: string
         }
@@ -183,6 +273,93 @@ export type Database = {
           full_name?: string | null
           id?: string
           phone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      site_settings: {
+        Row: {
+          id: string
+          is_visible: boolean
+          key: string
+          label: string | null
+          updated_at: string
+          value: string
+        }
+        Insert: {
+          id?: string
+          is_visible?: boolean
+          key: string
+          label?: string | null
+          updated_at?: string
+          value?: string
+        }
+        Update: {
+          id?: string
+          is_visible?: boolean
+          key?: string
+          label?: string | null
+          updated_at?: string
+          value?: string
+        }
+        Relationships: []
+      }
+      social_links: {
+        Row: {
+          id: string
+          is_visible: boolean
+          platform: string
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          id?: string
+          is_visible?: boolean
+          platform: string
+          updated_at?: string
+          url?: string
+        }
+        Update: {
+          id?: string
+          is_visible?: boolean
+          platform?: string
+          updated_at?: string
+          url?: string
+        }
+        Relationships: []
+      }
+      teachers: {
+        Row: {
+          class_range: string
+          created_at: string
+          display_order: number
+          expertise: string
+          id: string
+          is_visible: boolean
+          name: string
+          photo_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          class_range: string
+          created_at?: string
+          display_order?: number
+          expertise: string
+          id?: string
+          is_visible?: boolean
+          name: string
+          photo_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          class_range?: string
+          created_at?: string
+          display_order?: number
+          expertise?: string
+          id?: string
+          is_visible?: boolean
+          name?: string
+          photo_url?: string | null
           updated_at?: string
         }
         Relationships: []
