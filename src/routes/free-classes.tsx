@@ -4,7 +4,7 @@ import { Footer } from "@/components/Footer";
 import { FreeClasses } from "@/components/FreeClasses";
 
 export const Route = createFileRoute("/free-classes")({
-  head: () => ({ meta: [{ title: "ফ্রি ক্লাস — MSN একাডেমি" }, { name: "description", content: "ইউটিউবে আমাদের ফ্রি লেকচারগুলো দেখুন।" }] }),
+  head: () => ({ meta: [{ title: "ফ্রি ক্লাস — MNS Academy" }, { name: "description", content: "ইউটিউবে আমাদের ফ্রি লেকচারগুলো দেখুন।" }] }),
   component: () => (
     <div className="min-h-screen flex flex-col">
       <Navbar />

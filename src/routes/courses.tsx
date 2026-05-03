@@ -11,7 +11,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/courses")({
-  head: () => ({ meta: [{ title: "কোর্সসমূহ — MSN একাডেমি" }, { name: "description", content: "ক্লাস ৫ থেকে ১২ পর্যন্ত সকল কোর্স এক জায়গায়।" }] }),
+  head: () => ({ meta: [{ title: "কোর্সসমূহ — MNS Academy" }, { name: "description", content: "ক্লাস ১ থেকে ১২ পর্যন্ত সকল কোর্স এক জায়গায়।" }] }),
   component: CoursesPage,
 });
 

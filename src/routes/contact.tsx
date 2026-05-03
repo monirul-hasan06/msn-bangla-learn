@@ -6,14 +6,54 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { MapPin, Phone, Mail, MessageCircle } from "lucide-react";
+import { MapPin, Mail, MessageCircle, Loader2 } from "lucide-react";
+import { useState } from "react";
+import { z } from "zod";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import { useSiteSettings, buildWhatsAppLink } from "@/hooks/use-site";
 
 export const Route = createFileRoute("/contact")({
-  head: () => ({ meta: [{ title: "যোগাযোগ — MSN একাডেমি" }, { name: "description", content: "MSN একাডেমির সাথে যোগাযোগ করুন।" }] }),
+  head: () => ({ meta: [
+    { title: "যোগাযোগ — MNS Academy" },
+    { name: "description", content: "MNS Academy এর সাথে যোগাযোগ করুন।" },
+  ]}),
   component: ContactPage,
 });
 
+const schema = z.object({
+  name: z.string().trim().min(1, "নাম দিন").max(100),
+  email: z.string().trim().email("সঠিক ইমেইল দিন").max(255),
+  message: z.string().trim().min(1, "মেসেজ লিখুন").max(2000),
+});
+
 function ContactPage() {
+  const { settings } = useSiteSettings();
+  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [loading, setLoading] = useState(false);
+
+  const wa = settings.whatsapp_number?.is_visible ? settings.whatsapp_number.value : null;
+  const gmail = settings.platform_gmail?.is_visible ? settings.platform_gmail.value : null;
+  const address = settings.address?.is_visible ? settings.address.value : null;
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const r = schema.safeParse(form);
+    if (!r.success) return toast.error(r.error.errors[0].message);
+    setLoading(true);
+    const { error } = await supabase.from("messages").insert(r.data);
+    setLoading(false);
+    if (error) return toast.error(error.message);
+    toast.success("আপনার মেসেজ পাঠানো হয়েছে। ধন্যবাদ!");
+    setForm({ name: "", email: "", message: "" });
+  };
+
+  const cards = [
+    address && { icon: MapPin, title: "ঠিকানা", text: address },
+    gmail && { icon: Mail, title: "ইমেইল", text: gmail },
+    wa && { icon: MessageCircle, title: "WhatsApp", text: wa, href: buildWhatsAppLink(wa) },
+  ].filter(Boolean) as any[];
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -25,39 +65,36 @@ function ContactPage() {
           </div>
           <div className="grid md:grid-cols-2 gap-8">
             <div className="space-y-4">
-              {[
-                { icon: MapPin, title: "ঠিকানা", text: "বাড়ি #১২, রোড #৫, ধানমন্ডি, ঢাকা-১২০৫, বাংলাদেশ" },
-                { icon: Phone, title: "ফোন", text: "+৮৮০ ১XXX-XXXXXX" },
-                { icon: Mail, title: "ইমেইল", text: "info@msn.edu.bd" },
-                { icon: MessageCircle, title: "WhatsApp", text: "+৮৮০ ১XXX-XXXXXX" },
-              ].map((c) => (
+              {cards.map((c) => (
                 <Card key={c.title} className="p-5 flex gap-4 gradient-card border-border/50 shadow-soft">
                   <div className="w-11 h-11 rounded-xl gradient-hero flex items-center justify-center shrink-0">
                     <c.icon className="h-5 w-5 text-primary-foreground" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <h3 className="font-bold mb-1">{c.title}</h3>
-                    <p className="text-sm text-muted-foreground">{c.text}</p>
+                    {c.href ? <a href={c.href} target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-primary break-all">{c.text}</a>
+                      : <p className="text-sm text-muted-foreground break-words">{c.text}</p>}
                   </div>
                 </Card>
               ))}
             </div>
             <Card className="p-6 gradient-card border-border/50 shadow-card">
-              <h2 className="text-xl font-bold mb-4">মেসেজ পাঠান</h2>
-              <form className="space-y-4">
+              <h2 className="text-xl font-bold mb-4">বাংলা বার্তা পাঠান</h2>
+              <form className="space-y-4" onSubmit={submit}>
                 <div>
                   <Label htmlFor="name">আপনার নাম</Label>
-                  <Input id="name" placeholder="পূর্ণ নাম লিখুন" className="mt-1.5" />
+                  <Input id="name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="পূর্ণ নাম" className="mt-1.5" />
                 </div>
                 <div>
                   <Label htmlFor="email">ইমেইল</Label>
-                  <Input id="email" type="email" placeholder="email@example.com" className="mt-1.5" />
+                  <Input id="email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="email@example.com" className="mt-1.5" />
                 </div>
                 <div>
                   <Label htmlFor="msg">বার্তা</Label>
-                  <Textarea id="msg" placeholder="আপনার বার্তা লিখুন..." rows={5} className="mt-1.5" />
+                  <Textarea id="msg" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} placeholder="আপনার বার্তা লিখুন..." rows={5} className="mt-1.5" />
                 </div>
-                <Button type="submit" className="w-full gradient-hero text-primary-foreground border-0 shadow-soft hover:shadow-glow transition-all">
+                <Button type="submit" disabled={loading} className="w-full gradient-hero text-primary-foreground border-0 shadow-soft hover:shadow-glow transition-all">
+                  {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
                   পাঠিয়ে দিন
                 </Button>
               </form>

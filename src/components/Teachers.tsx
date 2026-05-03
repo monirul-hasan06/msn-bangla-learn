@@ -1,15 +1,10 @@
+import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { GraduationCap } from "lucide-react";
+import { GraduationCap, User } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
-const teachers = [
-  { name: "মোঃ রফিকুল ইসলাম", subject: "পদার্থবিজ্ঞান", classes: "ক্লাস ৯-১২", exp: "১২+ বছর", initial: "র" },
-  { name: "ড. সাবরিনা আক্তার", subject: "রসায়ন", classes: "ক্লাস ৯-১২", exp: "১০+ বছর", initial: "সা" },
-  { name: "মোঃ কামরুল হাসান", subject: "উচ্চতর গণিত", classes: "ক্লাস ৬-১২", exp: "১৫+ বছর", initial: "কা" },
-  { name: "নাফিসা তাবাসসুম", subject: "ইংরেজি", classes: "ক্লাস ৫-১২", exp: "৮+ বছর", initial: "না" },
-  { name: "তারেক মাহমুদ", subject: "জীববিজ্ঞান", classes: "ক্লাস ৯-১২", exp: "৯+ বছর", initial: "তা" },
-  { name: "ফারজানা ইয়াসমিন", subject: "বাংলা", classes: "ক্লাস ৫-১২", exp: "১১+ বছর", initial: "ফা" },
-];
+interface Teacher { id: string; name: string; expertise: string; class_range: string; photo_url: string | null; }
 
 const colors = [
   "from-orange-400 to-red-500",
@@ -21,32 +16,43 @@ const colors = [
 ];
 
 export function Teachers() {
+  const [teachers, setTeachers] = useState<Teacher[]>([]);
+  useEffect(() => {
+    supabase.from("teachers").select("*").eq("is_visible", true).order("display_order")
+      .then(({ data }) => setTeachers((data as any) || []));
+  }, []);
+
+  if (!teachers.length) return null;
+
   return (
     <section className="py-20 bg-background">
       <div className="container mx-auto px-4">
         <div className="text-center max-w-2xl mx-auto mb-12">
           <Badge variant="secondary" className="mb-3">আমাদের শিক্ষকমণ্ডলী</Badge>
           <h2 className="text-3xl md:text-4xl font-bold mb-3">
-            দেশের <span className="text-gradient">সেরা শিক্ষকরা</span>
+            অভিজ্ঞ ও <span className="text-gradient">যোগ্যতাসম্পন্ন শিক্ষক</span>
           </h2>
-          <p className="text-muted-foreground">অভিজ্ঞ ও যোগ্যতাসম্পন্ন শিক্ষকদের সাথে শেখো</p>
+          <p className="text-muted-foreground">দেশের সেরা শিক্ষকদের সাথে শেখো</p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {teachers.map((t, i) => (
-            <Card key={t.name} className="group p-6 gradient-card border-border/50 shadow-card hover:shadow-glow transition-all hover:-translate-y-1">
+            <Card key={t.id} className="group p-6 gradient-card border-border/50 shadow-card hover:shadow-glow transition-all hover:-translate-y-1">
               <div className="flex items-center gap-4 mb-4">
-                <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${colors[i]} flex items-center justify-center text-2xl font-bold text-white shadow-soft`}>
-                  {t.initial}
-                </div>
+                {t.photo_url ? (
+                  <img src={t.photo_url} alt={t.name} className="w-16 h-16 rounded-2xl object-cover shadow-soft" />
+                ) : (
+                  <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${colors[i % colors.length]} flex items-center justify-center shadow-soft`}>
+                    <User className="h-8 w-8 text-white" />
+                  </div>
+                )}
                 <div>
-                  <h3 className="font-bold text-lg">{t.name}</h3>
-                  <p className="text-sm text-primary font-medium">{t.subject}</p>
+                  <h3 className="font-bold text-base leading-tight">{t.name}</h3>
+                  <p className="text-sm text-primary font-medium mt-1">{t.expertise}</p>
                 </div>
               </div>
-              <div className="flex flex-wrap gap-2 pt-4 border-t border-border">
-                <Badge variant="outline" className="text-xs"><GraduationCap className="h-3 w-3 mr-1" />{t.classes}</Badge>
-                <Badge variant="outline" className="text-xs">{t.exp} অভিজ্ঞতা</Badge>
+              <div className="pt-4 border-t border-border">
+                <Badge variant="outline" className="text-xs"><GraduationCap className="h-3 w-3 mr-1" />{t.class_range}</Badge>
               </div>
             </Card>
           ))}
