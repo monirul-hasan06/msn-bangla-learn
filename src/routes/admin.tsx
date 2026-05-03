@@ -313,7 +313,7 @@ function CoursesTab() {
             <Input placeholder="বিষয় / সময়কাল" value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })} />
           </div>
           <Input type="number" placeholder="মূল্য (৳)" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} />
-          <Input placeholder="থাম্বনেইল URL (optional)" value={form.thumbnail_url} onChange={(e) => setForm({ ...form, thumbnail_url: e.target.value })} />
+          <ImageUpload value={form.thumbnail_url} onChange={(v) => setForm({ ...form, thumbnail_url: v })} folder="courses" label="কোর্স থাম্বনেইল (optional)" />
           <div className="flex gap-2">
             <Button onClick={save} className="gradient-hero text-primary-foreground border-0 flex-1">{editing ? "আপডেট" : "যোগ করুন"}</Button>
             {editing && <Button variant="outline" onClick={reset}>বাতিল</Button>}
