@@ -16,7 +16,7 @@ export const Route = createFileRoute("/exam")({
   component: ExamPage,
 });
 
-interface Exam { id: string; title: string; description: string | null; url: string; publish_date: string; }
+interface Exam { id: string; title: string; description: string | null; url: string; image_url: string | null; publish_date: string; }
 
 function ExamPage() {
   const [list, setList] = useState<Exam[]>([]);
