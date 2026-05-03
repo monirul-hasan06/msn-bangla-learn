@@ -381,7 +381,7 @@ function TeachersTab() {
           <Input placeholder="নাম" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
           <Input placeholder="বিশেষজ্ঞতা (e.g. Expert in Math, Physics)" value={form.expertise} onChange={(e) => setForm({ ...form, expertise: e.target.value })} />
           <Input placeholder="ক্লাস রেঞ্জ (e.g. Class 1 to 12)" value={form.class_range} onChange={(e) => setForm({ ...form, class_range: e.target.value })} />
-          <Input placeholder="ছবি URL (optional)" value={form.photo_url} onChange={(e) => setForm({ ...form, photo_url: e.target.value })} />
+          <ImageUpload value={form.photo_url} onChange={(v) => setForm({ ...form, photo_url: v })} folder="teachers" label="শিক্ষকের ছবি (optional)" />
           <div className="flex gap-2">
             <Button onClick={save} className="gradient-hero text-primary-foreground border-0 flex-1">{editing ? "আপডেট" : "যোগ করুন"}</Button>
             {editing && <Button variant="outline" onClick={reset}>বাতিল</Button>}
