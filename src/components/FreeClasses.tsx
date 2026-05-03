@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useSiteSettings } from "@/hooks/use-site";
 
-interface ClassLink { id: string; title: string; url: string; type: string; }
+interface ClassLink { id: string; title: string; url: string; type: string; image_url?: string | null; }
 
 function ytId(url: string) {
   const m = url.match(/(?:v=|youtu\.be\/|embed\/)([a-zA-Z0-9_-]{11})/);
@@ -40,7 +40,7 @@ export function FreeClasses() {
           <div className="grid md:grid-cols-3 gap-6 mb-8">
             {items.slice(0, 6).map((c) => {
               const id = ytId(c.url);
-              const thumb = id ? `https://img.youtube.com/vi/${id}/maxresdefault.jpg` : null;
+              const thumb = c.image_url || (id ? `https://img.youtube.com/vi/${id}/maxresdefault.jpg` : null);
               return (
                 <a key={c.id} href={c.url} target="_blank" rel="noopener noreferrer" className="group">
                   <Card className="overflow-hidden border-border/50 shadow-card hover:shadow-glow transition-all">

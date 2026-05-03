@@ -16,7 +16,7 @@ export const Route = createFileRoute("/exam")({
   component: ExamPage,
 });
 
-interface Exam { id: string; title: string; description: string | null; url: string; publish_date: string; }
+interface Exam { id: string; title: string; description: string | null; url: string; image_url: string | null; publish_date: string; }
 
 function ExamPage() {
   const [list, setList] = useState<Exam[]>([]);
@@ -52,6 +52,7 @@ function ExamPage() {
                       <div className="text-xs text-muted-foreground mb-1">{new Date(e.publish_date).toLocaleDateString("bn-BD")}</div>
                       <h3 className="font-bold text-lg mb-1">{e.title}</h3>
                       {e.description && <p className="text-sm text-muted-foreground mb-3 whitespace-pre-wrap">{e.description}</p>}
+                      {e.image_url && <img src={e.image_url} alt={e.title} className="mb-3 rounded-lg max-h-72 w-auto" loading="lazy" />}
                       <a href={e.url} target="_blank" rel="noopener noreferrer">
                         <Button size="sm" className="gradient-hero text-primary-foreground border-0">
                           পরীক্ষা দিন <ExternalLink className="ml-2 h-4 w-4" />

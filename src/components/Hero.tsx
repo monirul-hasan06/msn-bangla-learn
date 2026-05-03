@@ -2,8 +2,11 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Play, Sparkles } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import heroImg from "@/assets/hero.jpg";
+import { useSiteSettings } from "@/hooks/use-site";
 
 export function Hero() {
+  const { settings } = useSiteSettings();
+  const banner = settings.hero_banner_url?.value || heroImg;
   return (
     <section className="relative overflow-hidden">
       <div className="absolute inset-0 gradient-warm opacity-60" />
@@ -40,7 +43,7 @@ export function Hero() {
 
           <div className="relative">
             <div className="absolute inset-0 gradient-hero rounded-3xl blur-2xl opacity-30 scale-95" />
-            <img src={heroImg} alt="MNS Academy এ পড়াশোনা করছে শিক্ষার্থীরা" className="relative rounded-3xl shadow-glow w-full" />
+            <img src={banner} alt="MNS Academy এ পড়াশোনা করছে শিক্ষার্থীরা" className="relative rounded-3xl shadow-glow w-full aspect-video object-cover" />
           </div>
         </div>
       </div>

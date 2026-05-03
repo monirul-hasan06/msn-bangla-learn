@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Loader2, Plus, Trash2, Bell, BookOpen, Users, ShieldCheck, GraduationCap, Settings, Share2, Video, FileText, MessageSquare, Pencil, Eye, EyeOff } from "lucide-react";
+import { ImageUpload } from "@/components/ImageUpload";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
@@ -123,6 +124,7 @@ function NoticesTab() {
   const [list, setList] = useState<any[]>([]);
   const [editing, setEditing] = useState<any | null>(null);
   const [title, setTitle] = useState(""); const [content, setContent] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
   const [pinned, setPinned] = useState(false); const [broadcast, setBroadcast] = useState(true);
 
   const load = async () => {
@@ -131,16 +133,17 @@ function NoticesTab() {
   };
   useEffect(() => { load(); }, []);
 
-  const reset = () => { setEditing(null); setTitle(""); setContent(""); setPinned(false); };
+  const reset = () => { setEditing(null); setTitle(""); setContent(""); setImageUrl(""); setPinned(false); };
 
   const save = async () => {
     if (!title || !content) return toast.error("সব ঘর পূরণ করুন");
+    const payload: any = { title, content, is_pinned: pinned, image_url: imageUrl || null };
     if (editing) {
-      const { error } = await supabase.from("notices").update({ title, content, is_pinned: pinned }).eq("id", editing.id);
+      const { error } = await supabase.from("notices").update(payload).eq("id", editing.id);
       if (error) return toast.error(error.message);
       toast.success("আপডেট হয়েছে");
     } else {
-      const { error } = await supabase.from("notices").insert({ title, content, is_pinned: pinned });
+      const { error } = await supabase.from("notices").insert(payload);
       if (error) return toast.error(error.message);
       if (broadcast) await supabase.from("notifications").insert({ title, body: content, link: "/notices" });
       toast.success("নোটিশ পোস্ট হয়েছে");
@@ -148,7 +151,7 @@ function NoticesTab() {
     reset(); load();
   };
 
-  const startEdit = (n: any) => { setEditing(n); setTitle(n.title); setContent(n.content); setPinned(n.is_pinned); };
+  const startEdit = (n: any) => { setEditing(n); setTitle(n.title); setContent(n.content); setImageUrl(n.image_url || ""); setPinned(n.is_pinned); };
   const toggleVis = async (id: string, v: boolean) => { await supabase.from("notices").update({ is_visible: v }).eq("id", id); load(); };
   const del = async (id: string) => { await supabase.from("notices").delete().eq("id", id); toast.success("মুছে ফেলা হয়েছে"); load(); };
 
@@ -159,6 +162,7 @@ function NoticesTab() {
         <div className="space-y-3">
           <div><Label>শিরোনাম</Label><Input value={title} onChange={(e) => setTitle(e.target.value)} className="mt-1.5" /></div>
           <div><Label>বিস্তারিত</Label><Textarea rows={5} value={content} onChange={(e) => setContent(e.target.value)} className="mt-1.5" /></div>
+          <ImageUpload value={imageUrl} onChange={setImageUrl} folder="notices" label="নোটিশ ছবি (optional)" />
           <div className="flex items-center gap-3"><Switch checked={pinned} onCheckedChange={setPinned} id="pin" /><Label htmlFor="pin">পিন করুন</Label></div>
           {!editing && <div className="flex items-center gap-3"><Switch checked={broadcast} onCheckedChange={setBroadcast} id="bc" /><Label htmlFor="bc">সকলকে নোটিফিকেশন পাঠান</Label></div>}
           <div className="flex gap-2">
@@ -175,6 +179,7 @@ function NoticesTab() {
           {list.map((n) => (
             <div key={n.id} className="p-3 rounded-lg border border-border">
               <div className="flex justify-between items-start gap-2">
+                {n.image_url && <img src={n.image_url} alt="" className="w-12 h-12 rounded object-cover shrink-0" />}
                 <div className="flex-1">
                   <div className="font-medium text-sm">{n.title} {n.is_pinned && <Badge variant="outline" className="ml-1 text-xs">📌</Badge>}</div>
                   <div className="text-xs text-muted-foreground line-clamp-2">{n.content}</div>
@@ -197,7 +202,8 @@ function NoticesTab() {
 function ExamsTab() {
   const [list, setList] = useState<any[]>([]);
   const [editing, setEditing] = useState<any | null>(null);
-  const [form, setForm] = useState({ title: "", description: "", url: "", publish_date: new Date().toISOString().slice(0,10) });
+  const empty = { title: "", description: "", url: "", image_url: "", publish_date: new Date().toISOString().slice(0,10) };
+  const [form, setForm] = useState(empty);
 
   const load = async () => {
     const { data } = await supabase.from("exam_links").select("*").order("publish_date", { ascending: false });
@@ -205,11 +211,11 @@ function ExamsTab() {
   };
   useEffect(() => { load(); }, []);
 
-  const reset = () => { setEditing(null); setForm({ title: "", description: "", url: "", publish_date: new Date().toISOString().slice(0,10) }); };
+  const reset = () => { setEditing(null); setForm(empty); };
 
   const save = async () => {
     if (!form.title || !form.url) return toast.error("শিরোনাম ও লিংক দিন");
-    const payload = { ...form, publish_date: new Date(form.publish_date).toISOString() };
+    const payload = { ...form, image_url: form.image_url || null, publish_date: new Date(form.publish_date).toISOString() };
     if (editing) {
       const { error } = await supabase.from("exam_links").update(payload).eq("id", editing.id);
       if (error) return toast.error(error.message);
@@ -221,7 +227,7 @@ function ExamsTab() {
     }
     reset(); load();
   };
-  const startEdit = (e: any) => { setEditing(e); setForm({ title: e.title, description: e.description || "", url: e.url, publish_date: e.publish_date.slice(0,10) }); };
+  const startEdit = (e: any) => { setEditing(e); setForm({ title: e.title, description: e.description || "", url: e.url, image_url: e.image_url || "", publish_date: e.publish_date.slice(0,10) }); };
   const toggleVis = async (id: string, v: boolean) => { await supabase.from("exam_links").update({ is_visible: v }).eq("id", id); load(); };
   const del = async (id: string) => { await supabase.from("exam_links").delete().eq("id", id); toast.success("মুছে ফেলা হয়েছে"); load(); };
 
@@ -234,6 +240,7 @@ function ExamsTab() {
           <Textarea placeholder="বিবরণ (optional)" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
           <Input placeholder="পরীক্ষার URL" value={form.url} onChange={(e) => setForm({ ...form, url: e.target.value })} />
           <Input type="date" value={form.publish_date} onChange={(e) => setForm({ ...form, publish_date: e.target.value })} />
+          <ImageUpload value={form.image_url} onChange={(v) => setForm({ ...form, image_url: v })} folder="exams" label="পরীক্ষার ছবি (optional)" />
           <div className="flex gap-2">
             <Button onClick={save} className="gradient-hero text-primary-foreground border-0 flex-1">{editing ? "আপডেট" : "যোগ করুন"}</Button>
             {editing && <Button variant="outline" onClick={reset}>বাতিল</Button>}
@@ -306,7 +313,7 @@ function CoursesTab() {
             <Input placeholder="বিষয় / সময়কাল" value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })} />
           </div>
           <Input type="number" placeholder="মূল্য (৳)" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} />
-          <Input placeholder="থাম্বনেইল URL (optional)" value={form.thumbnail_url} onChange={(e) => setForm({ ...form, thumbnail_url: e.target.value })} />
+          <ImageUpload value={form.thumbnail_url} onChange={(v) => setForm({ ...form, thumbnail_url: v })} folder="courses" label="কোর্স থাম্বনেইল (optional)" />
           <div className="flex gap-2">
             <Button onClick={save} className="gradient-hero text-primary-foreground border-0 flex-1">{editing ? "আপডেট" : "যোগ করুন"}</Button>
             {editing && <Button variant="outline" onClick={reset}>বাতিল</Button>}
@@ -374,7 +381,7 @@ function TeachersTab() {
           <Input placeholder="নাম" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
           <Input placeholder="বিশেষজ্ঞতা (e.g. Expert in Math, Physics)" value={form.expertise} onChange={(e) => setForm({ ...form, expertise: e.target.value })} />
           <Input placeholder="ক্লাস রেঞ্জ (e.g. Class 1 to 12)" value={form.class_range} onChange={(e) => setForm({ ...form, class_range: e.target.value })} />
-          <Input placeholder="ছবি URL (optional)" value={form.photo_url} onChange={(e) => setForm({ ...form, photo_url: e.target.value })} />
+          <ImageUpload value={form.photo_url} onChange={(v) => setForm({ ...form, photo_url: v })} folder="teachers" label="শিক্ষকের ছবি (optional)" />
           <div className="flex gap-2">
             <Button onClick={save} className="gradient-hero text-primary-foreground border-0 flex-1">{editing ? "আপডেট" : "যোগ করুন"}</Button>
             {editing && <Button variant="outline" onClick={reset}>বাতিল</Button>}
@@ -407,7 +414,7 @@ function TeachersTab() {
 function ClassLinksTab() {
   const [list, setList] = useState<any[]>([]);
   const [editing, setEditing] = useState<any | null>(null);
-  const empty = { title: "", url: "", type: "free" };
+  const empty = { title: "", url: "", type: "free", image_url: "" };
   const [form, setForm] = useState(empty);
 
   const load = async () => {
@@ -419,16 +426,17 @@ function ClassLinksTab() {
   const reset = () => { setEditing(null); setForm(empty); };
   const save = async () => {
     if (!form.title || !form.url) return toast.error("শিরোনাম ও লিংক দিন");
+    const payload = { ...form, image_url: form.image_url || null };
     if (editing) {
-      const { error } = await supabase.from("class_links").update(form).eq("id", editing.id);
+      const { error } = await supabase.from("class_links").update(payload).eq("id", editing.id);
       if (error) return toast.error(error.message);
     } else {
-      const { error } = await supabase.from("class_links").insert(form);
+      const { error } = await supabase.from("class_links").insert(payload);
       if (error) return toast.error(error.message);
     }
     toast.success("সম্পন্ন"); reset(); load();
   };
-  const startEdit = (c: any) => { setEditing(c); setForm({ title: c.title, url: c.url, type: c.type }); };
+  const startEdit = (c: any) => { setEditing(c); setForm({ title: c.title, url: c.url, type: c.type, image_url: c.image_url || "" }); };
   const toggleVis = async (id: string, v: boolean) => { await supabase.from("class_links").update({ is_visible: v }).eq("id", id); load(); };
   const del = async (id: string) => { await supabase.from("class_links").delete().eq("id", id); load(); };
 
@@ -439,6 +447,7 @@ function ClassLinksTab() {
         <div className="space-y-3">
           <Input placeholder="শিরোনাম" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
           <Input placeholder="YouTube / ভিডিও লিংক" value={form.url} onChange={(e) => setForm({ ...form, url: e.target.value })} />
+          <ImageUpload value={form.image_url} onChange={(v) => setForm({ ...form, image_url: v })} folder="classes" label="ক্লাস কভার ছবি (optional, YouTube থাম্বনেইল না থাকলে)" />
           <div className="flex gap-2">
             <Button onClick={save} className="gradient-hero text-primary-foreground border-0 flex-1">{editing ? "আপডেট" : "যোগ করুন"}</Button>
             {editing && <Button variant="outline" onClick={reset}>বাতিল</Button>}
@@ -494,11 +503,16 @@ function SiteInfoTab() {
 function SettingRow({ item, onSave }: { item: any; onSave: (id: string, v: string, vis: boolean) => void }) {
   const [v, setV] = useState(item.value);
   const [vis, setVis] = useState(item.is_visible);
+  const isImage = /banner|image|logo|photo/i.test(item.key);
   return (
-    <div className="grid md:grid-cols-[180px_1fr_auto_auto] gap-2 items-center p-3 rounded-lg border border-border">
-      <div className="text-sm font-medium">{item.label || item.key}</div>
-      <Input value={v} onChange={(e) => setV(e.target.value)} />
-      <div className="flex items-center gap-2">
+    <div className="grid md:grid-cols-[180px_1fr_auto_auto] gap-2 items-start p-3 rounded-lg border border-border">
+      <div className="text-sm font-medium pt-2">{item.label || item.key}</div>
+      {isImage ? (
+        <ImageUpload value={v} onChange={setV} folder="site" label="" />
+      ) : (
+        <Input value={v} onChange={(e) => setV(e.target.value)} />
+      )}
+      <div className="flex items-center gap-2 pt-2">
         <Switch checked={vis} onCheckedChange={setVis} />
         <span className="text-xs text-muted-foreground">{vis ? "দেখানো হচ্ছে" : "লুকানো"}</span>
       </div>
