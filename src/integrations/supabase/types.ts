@@ -18,6 +18,7 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          image_url: string | null
           is_visible: boolean
           title: string
           type: string
@@ -26,6 +27,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          image_url?: string | null
           is_visible?: boolean
           title: string
           type?: string
@@ -34,6 +36,7 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          image_url?: string | null
           is_visible?: boolean
           title?: string
           type?: string
@@ -129,6 +132,7 @@ export type Database = {
           created_at: string
           description: string | null
           id: string
+          image_url: string | null
           is_visible: boolean
           publish_date: string
           title: string
@@ -138,6 +142,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          image_url?: string | null
           is_visible?: boolean
           publish_date?: string
           title: string
@@ -147,6 +152,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          image_url?: string | null
           is_visible?: boolean
           publish_date?: string
           title?: string
@@ -187,6 +193,7 @@ export type Database = {
           created_at: string
           created_by: string | null
           id: string
+          image_url: string | null
           is_pinned: boolean
           is_visible: boolean
           title: string
@@ -197,6 +204,7 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           id?: string
+          image_url?: string | null
           is_pinned?: boolean
           is_visible?: boolean
           title: string
@@ -207,6 +215,7 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           id?: string
+          image_url?: string | null
           is_pinned?: boolean
           is_visible?: boolean
           title?: string
