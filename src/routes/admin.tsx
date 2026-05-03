@@ -414,7 +414,7 @@ function TeachersTab() {
 function ClassLinksTab() {
   const [list, setList] = useState<any[]>([]);
   const [editing, setEditing] = useState<any | null>(null);
-  const empty = { title: "", url: "", type: "free" };
+  const empty = { title: "", url: "", type: "free", image_url: "" };
   const [form, setForm] = useState(empty);
 
   const load = async () => {
@@ -426,16 +426,17 @@ function ClassLinksTab() {
   const reset = () => { setEditing(null); setForm(empty); };
   const save = async () => {
     if (!form.title || !form.url) return toast.error("শিরোনাম ও লিংক দিন");
+    const payload = { ...form, image_url: form.image_url || null };
     if (editing) {
-      const { error } = await supabase.from("class_links").update(form).eq("id", editing.id);
+      const { error } = await supabase.from("class_links").update(payload).eq("id", editing.id);
       if (error) return toast.error(error.message);
     } else {
-      const { error } = await supabase.from("class_links").insert(form);
+      const { error } = await supabase.from("class_links").insert(payload);
       if (error) return toast.error(error.message);
     }
     toast.success("সম্পন্ন"); reset(); load();
   };
-  const startEdit = (c: any) => { setEditing(c); setForm({ title: c.title, url: c.url, type: c.type }); };
+  const startEdit = (c: any) => { setEditing(c); setForm({ title: c.title, url: c.url, type: c.type, image_url: c.image_url || "" }); };
   const toggleVis = async (id: string, v: boolean) => { await supabase.from("class_links").update({ is_visible: v }).eq("id", id); load(); };
   const del = async (id: string) => { await supabase.from("class_links").delete().eq("id", id); load(); };
 
@@ -446,6 +447,7 @@ function ClassLinksTab() {
         <div className="space-y-3">
           <Input placeholder="শিরোনাম" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
           <Input placeholder="YouTube / ভিডিও লিংক" value={form.url} onChange={(e) => setForm({ ...form, url: e.target.value })} />
+          <ImageUpload value={form.image_url} onChange={(v) => setForm({ ...form, image_url: v })} folder="classes" label="ক্লাস কভার ছবি (optional, YouTube থাম্বনেইল না থাকলে)" />
           <div className="flex gap-2">
             <Button onClick={save} className="gradient-hero text-primary-foreground border-0 flex-1">{editing ? "আপডেট" : "যোগ করুন"}</Button>
             {editing && <Button variant="outline" onClick={reset}>বাতিল</Button>}
