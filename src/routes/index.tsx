@@ -10,10 +10,10 @@ import { Footer } from "@/components/Footer";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "MSN একাডেমি — ক্লাস ৫-১২ অনলাইন শিক্ষা প্ল্যাটফর্ম" },
-      { name: "description", content: "MSN একাডেমিতে ক্লাস ৫ থেকে ১২ পর্যন্ত লাইভ ক্লাস, রেকর্ডেড ভিডিও, নোট ও মডেল টেস্ট। দেশের সেরা শিক্ষকদের সাথে ঘরে বসেই পড়াশোনা।" },
-      { property: "og:title", content: "MSN একাডেমি — অনলাইন শিক্ষা প্ল্যাটফর্ম" },
-      { property: "og:description", content: "ক্লাস ৫ থেকে ১২ পর্যন্ত সম্পূর্ণ একাডেমিক সমাধান।" },
+      { title: "MNS Academy — ক্লাস ১-১২ অনলাইন শিক্ষা প্ল্যাটফর্ম" },
+      { name: "description", content: "MNS Academy এ ক্লাস ১ থেকে ১২ পর্যন্ত লাইভ ক্লাস, রেকর্ডেড ভিডিও, নোট, পরীক্ষা ও মডেল টেস্ট। অভিজ্ঞ শিক্ষকদের সাথে ঘরে বসেই পড়াশোনা।" },
+      { property: "og:title", content: "MNS Academy — অনলাইন শিক্ষা প্ল্যাটফর্ম" },
+      { property: "og:description", content: "ক্লাস ১ থেকে ১২ পর্যন্ত সম্পূর্ণ একাডেমিক সমাধান।" },
     ],
   }),
   component: Index,

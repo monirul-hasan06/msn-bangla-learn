@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/notices")({
-  head: () => ({ meta: [{ title: "নোটিশ — MSN একাডেমি" }, { name: "description", content: "MSN একাডেমির সর্বশেষ নোটিশ ও ঘোষণা।" }] }),
+  head: () => ({ meta: [{ title: "নোটিশ — MNS Academy" }, { name: "description", content: "MNS Academy এর সর্বশেষ নোটিশ ও ঘোষণা।" }] }),
   component: NoticesPage,
 });
 
