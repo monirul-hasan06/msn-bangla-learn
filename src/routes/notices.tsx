@@ -18,6 +18,7 @@ interface Notice {
   title: string;
   content: string;
   is_pinned: boolean;
+  image_url: string | null;
   created_at: string;
 }
 
