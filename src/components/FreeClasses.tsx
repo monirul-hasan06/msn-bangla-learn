@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useSiteSettings } from "@/hooks/use-site";
 
-interface ClassLink { id: string; title: string; url: string; type: string; }
+interface ClassLink { id: string; title: string; url: string; type: string; image_url?: string | null; }
 
 function ytId(url: string) {
   const m = url.match(/(?:v=|youtu\.be\/|embed\/)([a-zA-Z0-9_-]{11})/);
