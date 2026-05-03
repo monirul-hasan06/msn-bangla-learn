@@ -40,7 +40,7 @@ export function FreeClasses() {
           <div className="grid md:grid-cols-3 gap-6 mb-8">
             {items.slice(0, 6).map((c) => {
               const id = ytId(c.url);
-              const thumb = id ? `https://img.youtube.com/vi/${id}/maxresdefault.jpg` : null;
+              const thumb = c.image_url || (id ? `https://img.youtube.com/vi/${id}/maxresdefault.jpg` : null);
               return (
                 <a key={c.id} href={c.url} target="_blank" rel="noopener noreferrer" className="group">
                   <Card className="overflow-hidden border-border/50 shadow-card hover:shadow-glow transition-all">
