@@ -124,6 +124,7 @@ function NoticesTab() {
   const [list, setList] = useState<any[]>([]);
   const [editing, setEditing] = useState<any | null>(null);
   const [title, setTitle] = useState(""); const [content, setContent] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
   const [pinned, setPinned] = useState(false); const [broadcast, setBroadcast] = useState(true);
 
   const load = async () => {
@@ -132,16 +133,17 @@ function NoticesTab() {
   };
   useEffect(() => { load(); }, []);
 
-  const reset = () => { setEditing(null); setTitle(""); setContent(""); setPinned(false); };
+  const reset = () => { setEditing(null); setTitle(""); setContent(""); setImageUrl(""); setPinned(false); };
 
   const save = async () => {
     if (!title || !content) return toast.error("সব ঘর পূরণ করুন");
+    const payload: any = { title, content, is_pinned: pinned, image_url: imageUrl || null };
     if (editing) {
-      const { error } = await supabase.from("notices").update({ title, content, is_pinned: pinned }).eq("id", editing.id);
+      const { error } = await supabase.from("notices").update(payload).eq("id", editing.id);
       if (error) return toast.error(error.message);
       toast.success("আপডেট হয়েছে");
     } else {
-      const { error } = await supabase.from("notices").insert({ title, content, is_pinned: pinned });
+      const { error } = await supabase.from("notices").insert(payload);
       if (error) return toast.error(error.message);
       if (broadcast) await supabase.from("notifications").insert({ title, body: content, link: "/notices" });
       toast.success("নোটিশ পোস্ট হয়েছে");
@@ -149,7 +151,7 @@ function NoticesTab() {
     reset(); load();
   };
 
-  const startEdit = (n: any) => { setEditing(n); setTitle(n.title); setContent(n.content); setPinned(n.is_pinned); };
+  const startEdit = (n: any) => { setEditing(n); setTitle(n.title); setContent(n.content); setImageUrl(n.image_url || ""); setPinned(n.is_pinned); };
   const toggleVis = async (id: string, v: boolean) => { await supabase.from("notices").update({ is_visible: v }).eq("id", id); load(); };
   const del = async (id: string) => { await supabase.from("notices").delete().eq("id", id); toast.success("মুছে ফেলা হয়েছে"); load(); };
 
@@ -160,6 +162,7 @@ function NoticesTab() {
         <div className="space-y-3">
           <div><Label>শিরোনাম</Label><Input value={title} onChange={(e) => setTitle(e.target.value)} className="mt-1.5" /></div>
           <div><Label>বিস্তারিত</Label><Textarea rows={5} value={content} onChange={(e) => setContent(e.target.value)} className="mt-1.5" /></div>
+          <ImageUpload value={imageUrl} onChange={setImageUrl} folder="notices" label="নোটিশ ছবি (optional)" />
           <div className="flex items-center gap-3"><Switch checked={pinned} onCheckedChange={setPinned} id="pin" /><Label htmlFor="pin">পিন করুন</Label></div>
           {!editing && <div className="flex items-center gap-3"><Switch checked={broadcast} onCheckedChange={setBroadcast} id="bc" /><Label htmlFor="bc">সকলকে নোটিফিকেশন পাঠান</Label></div>}
           <div className="flex gap-2">
@@ -176,6 +179,7 @@ function NoticesTab() {
           {list.map((n) => (
             <div key={n.id} className="p-3 rounded-lg border border-border">
               <div className="flex justify-between items-start gap-2">
+                {n.image_url && <img src={n.image_url} alt="" className="w-12 h-12 rounded object-cover shrink-0" />}
                 <div className="flex-1">
                   <div className="font-medium text-sm">{n.title} {n.is_pinned && <Badge variant="outline" className="ml-1 text-xs">📌</Badge>}</div>
                   <div className="text-xs text-muted-foreground line-clamp-2">{n.content}</div>
