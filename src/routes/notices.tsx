@@ -71,6 +71,7 @@ function NoticesPage() {
                       </div>
                       <h3 className="font-bold text-lg mb-1">{n.title}</h3>
                       <p className="text-sm text-muted-foreground whitespace-pre-wrap">{n.content}</p>
+                      {n.image_url && <img src={n.image_url} alt={n.title} className="mt-3 rounded-lg max-h-80 w-auto" loading="lazy" />}
                     </div>
                   </div>
                 </Card>
