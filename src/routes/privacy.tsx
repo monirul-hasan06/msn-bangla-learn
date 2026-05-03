@@ -4,7 +4,7 @@ import { Footer } from "@/components/Footer";
 import { Card } from "@/components/ui/card";
 
 export const Route = createFileRoute("/privacy")({
-  head: () => ({ meta: [{ title: "প্রাইভেসি পলিসি — MSN একাডেমি" }, { name: "description", content: "MSN একাডেমির প্রাইভেসি পলিসি।" }] }),
+  head: () => ({ meta: [{ title: "প্রাইভেসি পলিসি — MNS Academy" }, { name: "description", content: "MNS Academyর প্রাইভেসি পলিসি।" }] }),
   component: PrivacyPage,
 });
 

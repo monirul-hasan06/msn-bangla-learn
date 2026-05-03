@@ -11,7 +11,7 @@ import { lovable } from "@/integrations/lovable";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/signup")({
-  head: () => ({ meta: [{ title: "সাইন আপ — MSN একাডেমি" }] }),
+  head: () => ({ meta: [{ title: "সাইন আপ — MNS Academy" }] }),
   component: SignupPage,
 });
 
@@ -60,7 +60,7 @@ function SignupPage() {
           <div className="w-10 h-10 rounded-xl gradient-hero flex items-center justify-center shadow-soft">
             <GraduationCap className="h-5 w-5 text-primary-foreground" />
           </div>
-          <span className="text-gradient">MSN</span>
+          <span className="text-gradient">MNS Academy</span>
         </Link>
         <h1 className="text-2xl font-bold text-center mb-2">নতুন অ্যাকাউন্ট তৈরি করুন</h1>
         <p className="text-sm text-muted-foreground text-center mb-6">শেখার যাত্রা শুরু করো আজই</p>
