@@ -202,7 +202,8 @@ function NoticesTab() {
 function ExamsTab() {
   const [list, setList] = useState<any[]>([]);
   const [editing, setEditing] = useState<any | null>(null);
-  const [form, setForm] = useState({ title: "", description: "", url: "", publish_date: new Date().toISOString().slice(0,10) });
+  const empty = { title: "", description: "", url: "", image_url: "", publish_date: new Date().toISOString().slice(0,10) };
+  const [form, setForm] = useState(empty);
 
   const load = async () => {
     const { data } = await supabase.from("exam_links").select("*").order("publish_date", { ascending: false });
@@ -210,11 +211,11 @@ function ExamsTab() {
   };
   useEffect(() => { load(); }, []);
 
-  const reset = () => { setEditing(null); setForm({ title: "", description: "", url: "", publish_date: new Date().toISOString().slice(0,10) }); };
+  const reset = () => { setEditing(null); setForm(empty); };
 
   const save = async () => {
     if (!form.title || !form.url) return toast.error("শিরোনাম ও লিংক দিন");
-    const payload = { ...form, publish_date: new Date(form.publish_date).toISOString() };
+    const payload = { ...form, image_url: form.image_url || null, publish_date: new Date(form.publish_date).toISOString() };
     if (editing) {
       const { error } = await supabase.from("exam_links").update(payload).eq("id", editing.id);
       if (error) return toast.error(error.message);
@@ -226,7 +227,7 @@ function ExamsTab() {
     }
     reset(); load();
   };
-  const startEdit = (e: any) => { setEditing(e); setForm({ title: e.title, description: e.description || "", url: e.url, publish_date: e.publish_date.slice(0,10) }); };
+  const startEdit = (e: any) => { setEditing(e); setForm({ title: e.title, description: e.description || "", url: e.url, image_url: e.image_url || "", publish_date: e.publish_date.slice(0,10) }); };
   const toggleVis = async (id: string, v: boolean) => { await supabase.from("exam_links").update({ is_visible: v }).eq("id", id); load(); };
   const del = async (id: string) => { await supabase.from("exam_links").delete().eq("id", id); toast.success("মুছে ফেলা হয়েছে"); load(); };
 
@@ -239,6 +240,7 @@ function ExamsTab() {
           <Textarea placeholder="বিবরণ (optional)" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
           <Input placeholder="পরীক্ষার URL" value={form.url} onChange={(e) => setForm({ ...form, url: e.target.value })} />
           <Input type="date" value={form.publish_date} onChange={(e) => setForm({ ...form, publish_date: e.target.value })} />
+          <ImageUpload value={form.image_url} onChange={(v) => setForm({ ...form, image_url: v })} folder="exams" label="পরীক্ষার ছবি (optional)" />
           <div className="flex gap-2">
             <Button onClick={save} className="gradient-hero text-primary-foreground border-0 flex-1">{editing ? "আপডেট" : "যোগ করুন"}</Button>
             {editing && <Button variant="outline" onClick={reset}>বাতিল</Button>}
