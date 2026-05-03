@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Facebook, Youtube, Instagram, Users, MapPin, Mail, GraduationCap, MessageCircle } from "lucide-react";
+import { Facebook, Youtube, Instagram, Users, MapPin, Mail, GraduationCap, MessageCircle, ShieldCheck } from "lucide-react";
 import { useSiteSettings, useSocialLinks, buildWhatsAppLink } from "@/hooks/use-site";
 
 const ICONS: Record<string, any> = {
