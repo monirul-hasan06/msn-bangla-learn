@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Loader2, Plus, Trash2, Bell, BookOpen, Users, ShieldCheck, GraduationCap, Settings, Share2, Video, FileText, MessageSquare, Pencil, Eye, EyeOff } from "lucide-react";
+import { ImageUpload } from "@/components/ImageUpload";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
