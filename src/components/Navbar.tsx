@@ -12,6 +12,7 @@ const navItems = [
   { label: "কোর্স", to: "/courses" },
   { label: "শিক্ষক", to: "/teachers" },
   { label: "ফ্রি ক্লাস", to: "/free-classes" },
+  { label: "পরীক্ষা", to: "/exam" },
   { label: "নোটিশ", to: "/notices" },
   { label: "যোগাযোগ", to: "/contact" },
 ];
@@ -35,7 +36,7 @@ export function Navbar() {
           <div className="w-9 h-9 rounded-xl gradient-hero flex items-center justify-center shadow-glow">
             <GraduationCap className="h-5 w-5 text-primary-foreground" />
           </div>
-          <span className="text-gradient">MSN</span>
+          <span className="text-gradient">MNS Academy</span>
         </Link>
 
         <ul className="hidden lg:flex items-center gap-1">
