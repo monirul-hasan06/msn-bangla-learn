@@ -13,7 +13,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/profile")({
-  head: () => ({ meta: [{ title: "আমার প্রোফাইল — MSN" }] }),
+  head: () => ({ meta: [{ title: "আমার প্রোফাইল — MNS Academy" }] }),
   component: ProfilePage,
 });
 
