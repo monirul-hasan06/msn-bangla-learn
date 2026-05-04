@@ -23,7 +23,17 @@ export function Navbar() {
   const { user, role, signOut } = useAuth();
   const { canInstall, installed, promptInstall } = useInstallPrompt();
   const [open, setOpen] = useState(false);
+  const [avatar, setAvatar] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  useState(() => {});
+  // load avatar
+  if (typeof window !== "undefined" && user && avatar === null) {
+    import("@/integrations/supabase/client").then(({ supabase }) => {
+      supabase.from("profiles").select("avatar_url").eq("id", user.id).maybeSingle()
+        .then(({ data }) => setAvatar(data?.avatar_url || ""));
+    });
+  }
 
   const handleSignOut = async () => {
     await signOut();
