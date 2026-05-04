@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       class_links: {
         Row: {
+          course_id: string | null
           created_at: string
           id: string
           image_url: string | null
@@ -25,6 +26,7 @@ export type Database = {
           url: string
         }
         Insert: {
+          course_id?: string | null
           created_at?: string
           id?: string
           image_url?: string | null
@@ -34,6 +36,7 @@ export type Database = {
           url: string
         }
         Update: {
+          course_id?: string | null
           created_at?: string
           id?: string
           image_url?: string | null
@@ -129,6 +132,7 @@ export type Database = {
       }
       exam_links: {
         Row: {
+          course_id: string | null
           created_at: string
           description: string | null
           id: string
@@ -139,6 +143,7 @@ export type Database = {
           url: string
         }
         Insert: {
+          course_id?: string | null
           created_at?: string
           description?: string | null
           id?: string
@@ -149,6 +154,7 @@ export type Database = {
           url: string
         }
         Update: {
+          course_id?: string | null
           created_at?: string
           description?: string | null
           id?: string
@@ -168,6 +174,9 @@ export type Database = {
           is_read: boolean
           message: string
           name: string
+          replied_at: string | null
+          reply: string | null
+          user_id: string | null
         }
         Insert: {
           created_at?: string
@@ -176,6 +185,9 @@ export type Database = {
           is_read?: boolean
           message: string
           name: string
+          replied_at?: string | null
+          reply?: string | null
+          user_id?: string | null
         }
         Update: {
           created_at?: string
@@ -184,12 +196,16 @@ export type Database = {
           is_read?: boolean
           message?: string
           name?: string
+          replied_at?: string | null
+          reply?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
       notices: {
         Row: {
           content: string
+          course_id: string | null
           created_at: string
           created_by: string | null
           id: string
@@ -201,6 +217,7 @@ export type Database = {
         }
         Insert: {
           content: string
+          course_id?: string | null
           created_at?: string
           created_by?: string | null
           id?: string
@@ -212,6 +229,7 @@ export type Database = {
         }
         Update: {
           content?: string
+          course_id?: string | null
           created_at?: string
           created_by?: string | null
           id?: string
@@ -226,6 +244,7 @@ export type Database = {
       notifications: {
         Row: {
           body: string | null
+          course_id: string | null
           created_at: string
           id: string
           is_read: boolean
@@ -235,6 +254,7 @@ export type Database = {
         }
         Insert: {
           body?: string | null
+          course_id?: string | null
           created_at?: string
           id?: string
           is_read?: boolean
@@ -244,6 +264,7 @@ export type Database = {
         }
         Update: {
           body?: string | null
+          course_id?: string | null
           created_at?: string
           id?: string
           is_read?: boolean
@@ -262,6 +283,7 @@ export type Database = {
           full_name: string | null
           id: string
           phone: string | null
+          suspended_until: string | null
           updated_at: string
         }
         Insert: {
@@ -272,6 +294,7 @@ export type Database = {
           full_name?: string | null
           id: string
           phone?: string | null
+          suspended_until?: string | null
           updated_at?: string
         }
         Update: {
@@ -282,6 +305,7 @@ export type Database = {
           full_name?: string | null
           id?: string
           phone?: string | null
+          suspended_until?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -436,6 +460,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_enrolled: { Args: { _course_id: string }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "student"

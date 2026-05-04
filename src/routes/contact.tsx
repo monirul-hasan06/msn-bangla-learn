@@ -7,11 +7,12 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { MapPin, Mail, MessageCircle, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useSiteSettings, buildWhatsAppLink } from "@/hooks/use-site";
+import { useAuth } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({ meta: [
@@ -29,8 +30,13 @@ const schema = z.object({
 
 function ContactPage() {
   const { settings } = useSiteSettings();
+  const { user } = useAuth();
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (user) setForm((f) => ({ ...f, email: f.email || user.email || "" }));
+  }, [user]);
 
   const wa = settings.whatsapp_number?.is_visible ? settings.whatsapp_number.value : null;
   const gmail = settings.platform_gmail?.is_visible ? settings.platform_gmail.value : null;
@@ -41,11 +47,11 @@ function ContactPage() {
     const r = schema.safeParse(form);
     if (!r.success) return toast.error(r.error.errors[0].message);
     setLoading(true);
-    const { error } = await supabase.from("messages").insert(r.data);
+    const { error } = await supabase.from("messages").insert({ ...r.data, user_id: user?.id ?? null });
     setLoading(false);
     if (error) return toast.error(error.message);
     toast.success("আপনার মেসেজ পাঠানো হয়েছে। ধন্যবাদ!");
-    setForm({ name: "", email: "", message: "" });
+    setForm({ name: "", email: user?.email || "", message: "" });
   };
 
   const cards = [

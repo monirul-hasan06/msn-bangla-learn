@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Moon, Sun, GraduationCap, Menu, X, Download, LogOut, LayoutDashboard, User as UserIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { useTheme } from "@/hooks/use-theme";
 import { useAuth } from "@/hooks/use-auth";
 import { useInstallPrompt } from "@/hooks/use-install-prompt";
@@ -23,7 +24,14 @@ export function Navbar() {
   const { user, role, signOut } = useAuth();
   const { canInstall, installed, promptInstall } = useInstallPrompt();
   const [open, setOpen] = useState(false);
+  const [avatar, setAvatar] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user) { setAvatar(null); return; }
+    supabase.from("profiles").select("avatar_url").eq("id", user.id).maybeSingle()
+      .then(({ data }) => setAvatar(data?.avatar_url || ""));
+  }, [user]);
 
   const handleSignOut = async () => {
     await signOut();
@@ -74,8 +82,8 @@ export function Navbar() {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="rounded-full gradient-hero text-primary-foreground">
-                  <UserIcon className="h-4 w-4" />
+                <Button variant="ghost" size="icon" className="rounded-full overflow-hidden p-0 gradient-hero text-primary-foreground">
+                  {avatar ? <img src={avatar} alt="" className="w-full h-full object-cover" /> : <UserIcon className="h-4 w-4" />}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
