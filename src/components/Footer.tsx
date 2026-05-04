@@ -108,7 +108,7 @@ export function Footer() {
           <div className="pt-6 border-t border-background/10 flex flex-col md:flex-row items-center justify-between gap-3 text-sm text-background/60">
             <p>© {new Date().getFullYear()} All rights reserved MNS Academy</p>
             <p>
-              Powered by —{" "}
+              Built & developed by {" "}
               <a
                 href="https://www.facebook.com/share/17ji36osLq/"
                 target="_blank"
