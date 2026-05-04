@@ -108,15 +108,15 @@ export function Footer() {
           <div className="pt-6 border-t border-background/10 flex flex-col md:flex-row items-center justify-between gap-3 text-sm text-background/60">
             <p>© {new Date().getFullYear()} All rights reserved MNS Academy</p>
             <p>
-              Made by —{" "}
+              Powered by —{" "}
               <a
-                href="https://www.facebook.com/monirul.hasan06"
+                href="https://www.facebook.com/share/17ji36osLq/"
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ color: "#22c55e" }}
                 className="font-semibold hover:underline"
               >
-                Monirul Hasan Mithu
+                TechCanvix
               </a>
             </p>
           </div>
