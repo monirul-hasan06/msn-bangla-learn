@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { ImageUpload } from "@/components/ImageUpload";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({ meta: [{ title: "আমার প্রোফাইল — MNS Academy" }] }),
@@ -47,7 +48,7 @@ function ProfilePage() {
   const save = async () => {
     if (!user) return;
     const { error } = await supabase.from("profiles").update({
-      full_name: profile.full_name, phone: profile.phone, class_level: profile.class_level,
+      full_name: profile.full_name, phone: profile.phone, class_level: profile.class_level, avatar_url: profile.avatar_url,
     }).eq("id", user.id);
     if (error) toast.error(error.message); else toast.success("প্রোফাইল আপডেট হয়েছে");
   };
@@ -76,6 +77,14 @@ function ProfilePage() {
 
           <Card className="p-6 gradient-card">
             <h2 className="font-bold text-lg mb-4">ব্যক্তিগত তথ্য</h2>
+            <div className="mb-4">
+              <ImageUpload
+                value={profile?.avatar_url || ""}
+                onChange={(v) => setProfile({ ...profile, avatar_url: v })}
+                folder={`avatars/${user!.id}`}
+                label="প্রোফাইল ছবি"
+              />
+            </div>
             <div className="grid sm:grid-cols-2 gap-4">
               <div><Label>নাম</Label><Input className="mt-1.5" value={profile?.full_name || ""} onChange={(e) => setProfile({ ...profile, full_name: e.target.value })} /></div>
               <div><Label>ইমেইল</Label><Input className="mt-1.5" value={profile?.email || ""} disabled /></div>
