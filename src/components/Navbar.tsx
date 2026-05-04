@@ -84,8 +84,8 @@ export function Navbar() {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="rounded-full gradient-hero text-primary-foreground">
-                  <UserIcon className="h-4 w-4" />
+                <Button variant="ghost" size="icon" className="rounded-full overflow-hidden p-0 gradient-hero text-primary-foreground">
+                  {avatar ? <img src={avatar} alt="" className="w-full h-full object-cover" /> : <UserIcon className="h-4 w-4" />}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
