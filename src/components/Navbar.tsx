@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Moon, Sun, GraduationCap, Menu, X, Download, LogOut, LayoutDashboard, User as UserIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { useTheme } from "@/hooks/use-theme";
 import { useAuth } from "@/hooks/use-auth";
 import { useInstallPrompt } from "@/hooks/use-install-prompt";
@@ -26,14 +27,11 @@ export function Navbar() {
   const [avatar, setAvatar] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  useState(() => {});
-  // load avatar
-  if (typeof window !== "undefined" && user && avatar === null) {
-    import("@/integrations/supabase/client").then(({ supabase }) => {
-      supabase.from("profiles").select("avatar_url").eq("id", user.id).maybeSingle()
-        .then(({ data }) => setAvatar(data?.avatar_url || ""));
-    });
-  }
+  useEffect(() => {
+    if (!user) { setAvatar(null); return; }
+    supabase.from("profiles").select("avatar_url").eq("id", user.id).maybeSingle()
+      .then(({ data }) => setAvatar(data?.avatar_url || ""));
+  }, [user]);
 
   const handleSignOut = async () => {
     await signOut();
